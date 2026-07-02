@@ -1,0 +1,67 @@
+# config_E.yaml
+data:
+  train_dir: "dataset/train/sponza"
+  val_dir: "dataset/val/sponza"
+  test_dir: "dataset/test"
+  exr_epsilon: 0.001
+
+model:
+  type: "tiny"
+  features: [32, 48, 64]
+  use_enhancer: true
+  pretrained_path: "output_n2n/D/checkpoints/best_model.pth"
+  enhancer_path: "output_n2n/tex_enhance/checkpoints/best_model.pth"
+
+training:
+  batch_size: 16
+  patch_size: 128
+  epochs: 60
+  lr: 0.0005
+  weight_decay: 0.00001
+  lr_patience: 10
+  lr_factor: 0.5
+  min_lr: 0.00001
+  grad_clip: 1.0
+  gradient_accumulation: 1
+  use_amp: false
+  num_workers: 0
+  warmup_epochs: 5
+  seed: 42
+
+loss:
+  primary: "l1"
+  use_channel_weight: true
+  channel_weights: [1.5, 1.0, 2.5]
+  use_positive_bias: true
+  positive_bias_weight: 0.3
+  use_multiscale: true
+  multiscale_weight: 0.1
+  multiscale_start_epoch: 5
+  multiscale_scales: [1, 2, 4]
+  multiscale_scale_weights: [1.0, 0.5, 0.25]
+  use_gradient: true
+  gradient_weight: 0.05
+  gradient_start_epoch: 5
+  enhancer_tex_weight: 1.0
+  enhancer_l1_weight: 0.0
+  enhancer_smooth_weight: 0.1
+  enhancer_smooth_start: 5
+  enhancer_smooth_ramp: 5
+
+data_augmentation:
+  hflip_prob: 0.5
+  vflip_prob: 0.5
+  rotate_90_prob: 0.3
+  color_jitter: false
+
+validation:
+  val_every: 1
+  save_best: true
+  early_stop_patience: 25
+  metrics: ["psnr", "ssim"]
+
+output:
+  checkpoint_dir: "output_n2n/tex_enhance/checkpoints"
+  log_dir: "output_n2n/tex_enhance/logs"
+  vis_dir: "output_n2n/tex_enhance/visualizations"
+  save_every: 2
